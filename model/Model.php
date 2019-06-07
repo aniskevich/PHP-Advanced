@@ -1,29 +1,66 @@
 <?php
 
 namespace app\model;
-use app\engine;
+use app\engine\Db;
 use app\interfaces\IModel;
 
 abstract class Model implements IModel
 {
-    protected $id;
     protected $db;
     private $tableName;
 
-    public function __construct(engine\Db $db)
+    public function __construct()
     {
-        $this->db = $db;
+        $this->db = Db::getInstance();
         $this->tableName = strtr(strtolower(get_class($this)), ['app\model\\'=>'']);
     }
 
+    public function buildFromDb($id) {
+        $query = "SELECT * FROM {$this->tableName} WHERE id = :id";
+        return $this->db->build($query, [':id' => $id], get_class($this));
+    }
+
     public function getOne($id) {
-        $query = "SELECT * FROM {$this->tableName} WHERE id = {$id}";
-        $this->db->queryOne($query);
+        $query = "SELECT * FROM {$this->tableName} WHERE id = :id";
+        return $this->db->queryOne($query, [':id' => $id]);
     }
 
     public function getAll() {
         $query = "SELECT * FROM {$this->tableName}";
-        $this->db->queryAll($query);
+        return $this->db->queryAll($query);
     }
 
+    public function getWhere($name, $value) {
+        $query = "SELECT * FROM {$this->tableName} WHERE {$name} = '{$value}'";
+        return $this->db->queryAll($query);
+    }
+
+    public function insert() {
+        $params = json_decode(json_encode($this),TRUE);
+        unset($params['id']);
+        $keys = implode(',', array_keys($params));
+        $values = ':'.implode(',:', array_keys($params));
+        $query = "INSERT INTO {$this->tableName} ({$keys}) VALUES ({$values})";
+        $this->id = $this->db->execute($query, $params);
+    }
+
+    public function delete() {
+        $query = "DELETE FROM {$this->tableName} WHERE id = :id";
+        $this->db->execute($query, [':id' => $this->id]);
+    }
+
+    public function update() {
+        $new = json_decode(json_encode($this),TRUE);
+        $original = $this->getOne($this->id);
+        $params = array_diff($new, $original);
+        unset($params['id']);
+        $str = '';
+        foreach ($params as $keys => $values) {
+            $str .= $keys . " = :" . $keys . ", ";
+        }
+        $str = substr($str, 0, -2);
+        $query = "UPDATE {$this->tableName} SET {$str} WHERE id = :id";
+        $params['id'] = $this->id;
+        $this->db->execute($query, $params);
+    }
 }
