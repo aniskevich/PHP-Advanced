@@ -2,9 +2,8 @@
 
 namespace app\model;
 use app\engine\Db;
-use app\interfaces\IModel;
 
-abstract class Model implements IModel
+abstract class DbModel extends Models
 {
     protected $db;
     private $tableName;
@@ -35,6 +34,11 @@ abstract class Model implements IModel
         return $this->db->queryAll($query);
     }
 
+    public function getLimit($from, $to) {
+        $query = "SELECT * FROM {$this->tableName} LIMIT :from, :to";
+        return $this->db->queryAll($query, [':from' => $from, ':to' => $to]);
+    }
+
     public function insert() {
         $params = json_decode(json_encode($this),TRUE);
         unset($params['id']);
@@ -42,6 +46,7 @@ abstract class Model implements IModel
         $values = ':'.implode(',:', array_keys($params));
         $query = "INSERT INTO {$this->tableName} ({$keys}) VALUES ({$values})";
         $this->id = $this->db->execute($query, $params);
+
     }
 
     public function delete() {

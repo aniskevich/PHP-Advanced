@@ -2,7 +2,7 @@
 
 namespace app\model;
 
-class Products extends Model
+class Products extends DbModel
 {
     public $id;
     public $name;
@@ -13,6 +13,8 @@ class Products extends Model
     public $price;
     public $link;
     public $about;
+
+    public $quantity;
 
     public function __construct($name = null, $category = null, $type = null, $color = null, $size = null, $price = null, $link = null, $about = null)
     {
