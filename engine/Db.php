@@ -26,7 +26,7 @@ class Db
                 $this->config['password']
             );
             $this->connection->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_ASSOC);
-            $this->connection->setAttribute(\PDO::ATTR_EMULATE_PREPARES, FALSE);
+            $this->connection->setAttribute(\PDO::ATTR_EMULATE_PREPARES, false);
         }
         return $this->connection;
     }
@@ -40,6 +40,10 @@ class Db
             );
     }
 
+    public function lastInsertId() {
+        return $this->connection->lastInsertId();
+    }
+
     private function query($sql, $params) {
         $stmt = $this->getConnection()->prepare($sql);
         $stmt->execute($params);
@@ -48,7 +52,7 @@ class Db
 
     public function execute($sql, $params) {
         $this->query($sql, $params);
-        return $this->getConnection()->lastInsertId();
+        return true;
     }
 
     public function build($sql, $id, $class) {

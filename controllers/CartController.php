@@ -1,13 +1,20 @@
 <?php
 
 namespace app\controllers;
+use app\interfaces\IRender;
 use app\model\Cart;
 use app\model\Products;
 
 class CartController extends Controller
 {
     protected $defaultAction = 'cart';
-    private $user_id = 1; //временно
+    private $user_id;
+
+    public function __construct(IRender $renderer)
+    {
+        parent::__construct($renderer);
+        $this->user_id = $_SESSION['user_id'];
+    }
 
     public function actionCart() {
         $user_id = $this->user_id;

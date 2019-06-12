@@ -13,4 +13,4 @@
 </div>
 <?php endforeach; ?>
 </div>
-<a class="btn btn-dark" href="?c=product&a=catalog&p=<?=$_GET['p'] +1 ?>">Show more</a>
+<a class="btn btn-dark" href="?c=product&a=catalog&p=<?=$page +1 ?>">Show more</a>

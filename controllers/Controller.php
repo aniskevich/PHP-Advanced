@@ -2,12 +2,20 @@
 
 namespace app\controllers;
 
+use app\interfaces\IRender;
+
 abstract class Controller
 {
     private $action;
-    protected $defaultAction = 'index';
+    protected $defaultAction = 'auth';
     private $layout = 'main';
     private $useLayout = true;
+    private $renderer;
+
+    public function __construct(IRender $renderer)
+    {
+        $this->renderer = $renderer;
+    }
 
     public function runAction() {
         $this->action = $_GET['a'] ?: $this->defaultAction;
@@ -25,22 +33,22 @@ abstract class Controller
 
     public function render($template, $params = []) {
         if ($this->useLayout) {
-            return $this->renderTemplate("layouts/{$this->layout}",
-                   ['content' => $this->renderTemplate($template, $params)]);
+            if (!isset($_SESSION['login']))  {
+                $username = null;
+            } else {
+                $username = $_SESSION['login'];
+            }
+            return $this->renderer->renderTemplate("layouts/{$this->layout}",
+                   [
+                       'content' => $this->renderer->renderTemplate($template, $params),
+                       'username' => $username
+                   ]);
         } else {
-            return $this->renderTemplate($template, $params);
+            return $this->renderer->renderTemplate($template, $params);
         }
     }
 
     public function renderTemplate($template, $params = []) {
-        ob_start();
-        extract($params);
-        $fileName = "../views/{$template}.php";
-        if (file_exists($fileName)) {
-            include $fileName;
-        } else {
-            echo "404";
-        }
-        return ob_get_clean();
+        return $this->renderer->renderTemplate($template, $params);
     }
 }

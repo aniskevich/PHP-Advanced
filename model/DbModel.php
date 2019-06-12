@@ -45,7 +45,8 @@ abstract class DbModel extends Models
         $keys = implode(',', array_keys($params));
         $values = ':'.implode(',:', array_keys($params));
         $query = "INSERT INTO {$this->tableName} ({$keys}) VALUES ({$values})";
-        $this->id = $this->db->execute($query, $params);
+        $this->db->execute($query, $params);
+        $this->id = $this->db->lastInsertId();
 
     }
 
