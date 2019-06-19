@@ -3,11 +3,19 @@
 namespace app\engine;
 
 use app\interfaces\IRender;
-use app\traits\Tsingletone;
 
 class Render implements IRender
 {
-    use Tsingletone;
+    private static $instance = null;
+    public static $count;
+
+    public static function getInstance() {
+        if (static::$instance == null) {
+            static::$instance = new static();
+            static::$count++;
+        }
+        return static::$instance;
+    }
 
     public function renderTemplate($template, $params = []) {
         ob_start();

@@ -6,7 +6,7 @@ use app\engine\Db;
 abstract class DbModel extends Models
 {
     protected $db;
-    private $tableName;
+    protected $tableName;
 
     public function __construct()
     {
@@ -34,6 +34,11 @@ abstract class DbModel extends Models
         return $this->db->queryAll($query);
     }
 
+    public function getCountWhere($name, $value) {
+        $query = "SELECT count(*) as count FROM {$this->tableName} WHERE $name = :$name";
+        return $this->db->queryOne($query, ["$name" => $value])['count'];
+    }
+
     public function getLimit($from, $to) {
         $query = "SELECT * FROM {$this->tableName} LIMIT :from, :to";
         return $this->db->queryAll($query, [':from' => $from, ':to' => $to]);
@@ -47,7 +52,6 @@ abstract class DbModel extends Models
         $query = "INSERT INTO {$this->tableName} ({$keys}) VALUES ({$values})";
         $this->db->execute($query, $params);
         $this->id = $this->db->lastInsertId();
-
     }
 
     public function delete() {
@@ -68,5 +72,12 @@ abstract class DbModel extends Models
         $query = "UPDATE {$this->tableName} SET {$str} WHERE id = :id";
         $params['id'] = $this->id;
         $this->db->execute($query, $params);
+    }
+
+    public function save() {
+        if (is_null($this->id))
+            $this->insert();
+        else
+            $this->update();
     }
 }

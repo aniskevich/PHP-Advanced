@@ -14,3 +14,4 @@
 <?php endforeach; ?>
 </div>
 <a class="btn btn-dark" href="?c=product&a=catalog&p=<?=$page +1 ?>">Show more</a>
+

@@ -1,6 +1,6 @@
-<p>User_ID: {{ user_id }}</p>
-    {% for product in products %}
-    <div class="row">
+<p>S_ID: {{ session_id }}</p>
+    {% for product in cart %}
+    <div class="row cart">
        <!-- <div class="col-2"><img src="../img/<?=$product->link?>" alt=""></div> -->
         <div class="col-1">{{ product.name }}</div>
         <div class="col-1">{{ product.category }}</div>
@@ -10,5 +10,28 @@
         <div class="col-3">{{ product.about }}</div>
         <div class="col-1">{{ product.price }}</div>
         <div class="col-1">{{ product.quantity }}</div>
+        <button data-id="{{ product.cart_id }}" class="btn btn-dark delete">Delete</button>
     </div>
     {% endfor %}
+
+<script>
+    $(document).ready(function() {
+        $(".delete").on('click', function(){
+            const id = $(this).attr('data-id');
+            $.ajax({
+                url: "/cart/deletecart/",
+                type: "POST",
+                dataType: "json",
+                data: {
+                    id: id
+                },
+                error: function() {alert('error');},
+                success: function(response) {
+                    $(".count").html(response['count']);
+                    const id = response['id'];
+                    $(".delete").filter(function(){return $(this).data("id")   == id}).parent().remove();
+                }
+            })
+        })
+    })
+</script>

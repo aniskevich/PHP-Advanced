@@ -7,10 +7,33 @@
                 <p class="card-text">{{ product.about }}</p>
                 <p class="card-text">{{ product.price }} $</p>
                 <p class="card-text">{{ product.color }}</p>
-                <p class="card-text"><{{ product.size }}</p>
-                <a href="#" class="btn btn-dark">Buy</a>
+                <p class="card-text">{{ product.size }}</p>
+                <input type="number" class="quantity" value="1">
+                <button data-id="{{ product.id }}" class="btn btn-dark buy">Buy</button>
             </div>
         </div>
     </div>
-    <a href="?c=product&a=catalog&p=1" class="btn btn-dark">Back</a>
+    <a href="/product/catalog/?p=1" class="btn btn-dark">Back</a>
 </div>
+
+<script>
+    $(document).ready(function() {
+        $(".buy").on('click', function(){
+            const id = $(this).attr('data-id');
+            const quantity = $(this.previousElementSibling).val();
+            $.ajax({
+                url: "/cart/addcart/",
+                type: "POST",
+                dataType: "json",
+                data: {
+                    id: id,
+                    quantity: quantity
+                },
+                error: function() {alert('error');},
+                success: function(response) {
+                    $(".count").html(response['count']);
+                }
+            })
+        })
+    })
+</script>

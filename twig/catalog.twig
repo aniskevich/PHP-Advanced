@@ -7,11 +7,10 @@
             <h5 class="card-title">{{ product.name }}</h5>
             <p class="card-text">{{ product.about }}</p>
             <p class="card-text">{{ product.price }} $</p>
-            <a href="?c=product&a=card&id={{ product.id }}" class="btn btn-dark">Detail</a>
+            <a href="/product/card/?id={{ product.id }}" class="btn btn-dark">Detail</a>
         </div>
     </div>
 </div>
 {% endfor %}
 </div>
-<a class="btn btn-dark" href="?c=product&a=catalog&p={{ page +1 }}">Show more</a>
-
+<a class="btn btn-dark" href="/product/catalog/?p={{ page +1 }}">Show more</a>

@@ -3,9 +3,9 @@
 namespace app\controllers;
 
 use app\interfaces\IRender;
+use app\model\Cart;
 
-abstract class Controller
-{
+abstract class Controller {
     private $action;
     protected $defaultAction = 'auth';
     private $layout = 'main';
@@ -17,8 +17,8 @@ abstract class Controller
         $this->renderer = $renderer;
     }
 
-    public function runAction() {
-        $this->action = $_GET['a'] ?: $this->defaultAction;
+    public function runAction($action = null) {
+        $this->action = $action ?: $this->defaultAction;
         $method = "action" . ucfirst($this->action);
         if (method_exists($this, $method)) {
             $this->$method();
@@ -41,7 +41,8 @@ abstract class Controller
             return $this->renderer->renderTemplate("layouts/{$this->layout}",
                    [
                        'content' => $this->renderer->renderTemplate($template, $params),
-                       'username' => $username
+                       'username' => $username,
+                       'count' => (new Cart(session_id()))->getCountWhere('session_id', session_id())
                    ]);
         } else {
             return $this->renderer->renderTemplate($template, $params);

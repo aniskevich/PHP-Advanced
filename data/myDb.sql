@@ -49,22 +49,20 @@ INSERT INTO `Products` VALUES (1,'T-shirt','men','T-Shirts','red','XS',100,'Prod
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `cart` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) NOT NULL,
+  `session_id` varchar(30) NOT NULL,
   `product_id` int(11) NOT NULL,
   `quantity` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `product_id` (`product_id`),
-  KEY `user` (`user_id`),
-  CONSTRAINT `product_id` FOREIGN KEY (`product_id`) REFERENCES `Products` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=77 DEFAULT CHARSET=utf8;
+  CONSTRAINT `product_id` FOREIGN KEY (`product_id`) REFERENCES `Products` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=124 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `cart`
 --
 
-INSERT INTO `cart` VALUES (75,3,2,4),(76,3,1,8);
+INSERT INTO `cart` VALUES (76,'3',1,8),(115,'rh2r47op2gqo1hkci16jkdqlcv',4,1),(122,'rh2r47op2gqo1hkci16jkdqlcv',2,4),(123,'rh2r47op2gqo1hkci16jkdqlcv',5,2);
 
 --
 -- Table structure for table `categories`
@@ -159,7 +157,7 @@ CREATE TABLE `reviews` (
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   CONSTRAINT `user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -199,7 +197,7 @@ CREATE TABLE `users` (
   `pass` varchar(60) DEFAULT NULL,
   `info` varchar(256) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -217,4 +215,4 @@ INSERT INTO `users` VALUES (1,'Vanya','Pupkin',NULL),(2,'Petya','Vasin',NULL),(3
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-06-12 18:54:20
+-- Dump completed on 2019-06-19 11:09:32

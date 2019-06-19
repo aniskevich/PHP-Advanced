@@ -1,31 +1,49 @@
 <?php
 
 namespace app\controllers;
+use app\engine\Request;
 use app\interfaces\IRender;
 use app\model\Cart;
-use app\model\Products;
 
 class CartController extends Controller
 {
     protected $defaultAction = 'cart';
-    private $user_id;
+    private $session_id;
 
     public function __construct(IRender $renderer)
     {
         parent::__construct($renderer);
-        $this->user_id = $_SESSION['user_id'];
+        $this->session_id = session_id();
     }
 
     public function actionCart() {
-        $user_id = $this->user_id;
-        $cart = (new Cart($user_id))->getWhere('user_id', $user_id);
-        $products = [];
-        foreach ($cart as $key => $value) {
-            extract($value);
-            $product = (new Products())->buildFromDb($product_id);
-            $product->quantity = $quantity;
-            $products[] = $product;
-        }
-        echo $this->render('cart', ['products' => $products, 'user_id' => $user_id]);
+        $session_id = $this->session_id;
+        $cart = (new Cart($session_id))->getCart();
+        echo $this->render('cart', ['cart' => $cart, 'session_id' => $session_id]);
     }
+
+    public function actionAddCart() {
+        $request = new Request();
+        $id = $request->getParams()['id'];
+        $quantity = $request->getParams()['quantity'];
+        $cart = new Cart(session_id(), $id, $quantity);
+        $cart->save();
+        $count = $cart->getCountWhere('session_id', session_id());
+        $response = ['result' => 1, 'count' => $count];
+        header('Content-Type: application/json');
+        echo json_encode($response);
+    }
+
+    public function actionDeleteCart() {
+        $request = new Request();
+        $id = $request->getParams()['id'];
+        $cart = new Cart(session_id());
+        $cart->id = $id;
+        $cart->delete();
+        $count = $cart->getCountWhere('session_id', session_id());
+        $response = ['result' => 1, 'count' => $count, 'id' => $id];
+        header('Content-Type: application/json');
+        echo json_encode($response);
+    }
+
 }
