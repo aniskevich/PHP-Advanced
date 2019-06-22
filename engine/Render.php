@@ -21,10 +21,14 @@ class Render implements IRender
         ob_start();
         extract($params);
         $fileName = "../views/{$template}.php";
-        if (file_exists($fileName)) {
-            include $fileName;
-        } else {
-            echo "404";
+        try {
+            if (file_exists($fileName)) {
+                include $fileName;
+            } else {
+                throw new \Exception('Нет у нас такой страницы', 404);
+            }
+        } catch (\Exception $e) {
+            echo $e->getMessage();
         }
         return ob_get_clean();
     }

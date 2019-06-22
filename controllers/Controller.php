@@ -3,7 +3,8 @@
 namespace app\controllers;
 
 use app\interfaces\IRender;
-use app\model\Cart;
+use app\model\entities\Cart;
+use app\model\repositories\CartRepository;
 
 abstract class Controller {
     private $action;
@@ -18,12 +19,16 @@ abstract class Controller {
     }
 
     public function runAction($action = null) {
-        $this->action = $action ?: $this->defaultAction;
-        $method = "action" . ucfirst($this->action);
-        if (method_exists($this, $method)) {
-            $this->$method();
-        } else {
-            echo "404";
+        try {
+            $this->action = $action ?: $this->defaultAction;
+            $method = "action" . ucfirst($this->action);
+            if (method_exists($this, $method)) {
+                $this->$method();
+            } else {
+                throw new \Exception("Такое действие нифига не предусмотрено, творец еще глуп", 404);
+            }
+        } catch(\Exception $e) {
+            echo $e->getMessage();
         }
     }
 
@@ -42,7 +47,7 @@ abstract class Controller {
                    [
                        'content' => $this->renderer->renderTemplate($template, $params),
                        'username' => $username,
-                       'count' => (new Cart(session_id()))->getCountWhere('session_id', session_id())
+                       'count' => (new CartRepository(session_id()))->getCountWhere('session_id', session_id())
                    ]);
         } else {
             return $this->renderer->renderTemplate($template, $params);

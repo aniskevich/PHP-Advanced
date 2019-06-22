@@ -4,9 +4,7 @@
 namespace app\model;
 
 
-use app\interfaces\IModel;
-
-abstract class Models implements IModel
+abstract class Models
 {
 
 }

@@ -18,9 +18,13 @@ class Twigrender implements IRender
 
     public function renderTemplate($template, $params = []) {
         $fileName = "../twig/". $template . ".twig";
-        if (file_exists($fileName))
-            return $this->twig->render($template . ".twig", $params);
-        else
-            echo "404";
+        try {
+            if (file_exists($fileName))
+                return $this->twig->render($template . ".twig", $params);
+            else
+                throw new \Exception('Нет у нас такой страницы', 404);
+        } catch(\Exception $e) {
+            echo $e->getMessage();
+        }
     }
 }

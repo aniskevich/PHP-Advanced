@@ -1,8 +1,8 @@
 <?php
 
-namespace app\model;
+namespace app\model\entities;
 
-class Products extends DbModel
+class Products extends DataEntity
 {
     public $id;
     public $name;
@@ -18,7 +18,6 @@ class Products extends DbModel
 
     public function __construct($name = null, $category = null, $type = null, $color = null, $size = null, $price = null, $link = null, $about = null)
     {
-        parent::__construct();
         $this->name = $name;
         $this->category = $category;
         $this->type = $type;
@@ -28,5 +27,4 @@ class Products extends DbModel
         $this->link = $link;
         $this->about = $about;
     }
-
 }
