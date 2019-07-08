@@ -14,7 +14,7 @@
         <div class="col-1">{{ order.payment }}</div>
         <div class="col-2">{{ order.address }}</div>
         <div class="col-3">{{ order.date }}</div>
-        <div class="col-2">Total: {{ sum }}</div>
+        <div class="col-2">Total: {{ order.sum }}</div>
         <div class="col-1">{{ order.status }}</div>
         {% for product in order.cart %}
     <div class="col-12">

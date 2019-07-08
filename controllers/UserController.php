@@ -43,17 +43,17 @@ class UserController extends Controller
 
     public function actionCabinet() {
         $orders = App::call()->ordersRepository->getWhere('user_id', App::call()->session->getUserId());
-        $sum = 0;
         foreach ($orders as $key => $order) {
+            $orders[$key]['sum'] =0;
             $orders[$key]['cart'] = App::call()->cartRepository->getWhere('session_id', $order['session_id']);
             foreach ($orders[$key]['cart'] as $k => $product) {
                 $orders[$key]['cart'][$k] = App::call()->cartRepository->getCart($product['product_id']);
                 $orders[$key]['cart'][$k]['quantity'] = $product['quantity'];
                 $orders[$key]['cart'][$k]['subtotal'] = $orders[$key]['cart'][$k]['price'] * $product['quantity'];
-                $sum += $orders[$key]['cart'][$k]['subtotal'];
+                $orders[$key]['sum'] += $orders[$key]['cart'][$k]['subtotal'];
             }
         }
-        echo $this->render('cabinet', ['orders' => $orders, 'sum' => $sum]);
+        echo $this->render('cabinet', ['orders' => $orders]);
 
     }
 
