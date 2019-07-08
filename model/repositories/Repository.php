@@ -2,7 +2,7 @@
 
 namespace app\model\repositories;
 
-use app\engine\Db;
+use app\engine\App;
 use app\interfaces\IModel;
 use app\model\entities\DataEntity;
 
@@ -13,7 +13,7 @@ abstract class Repository implements IModel
 
     public function __construct()
     {
-        $this->db = Db::getInstance();
+        $this->db = App::call()->db;
         $this->tableName = strtr(strtolower(get_class($this)), ['app\model\repositories\\'=>'', 'repository' => '']);
     }
 
@@ -24,7 +24,7 @@ abstract class Repository implements IModel
 
     public function getOne($id) {
         $query = "SELECT * FROM {$this->tableName} WHERE id = :id";
-        return $this->db->queryOne($query, [':id' => $id]);
+        return $this->db->build($query, [':id' => $id], $this->getEntityClass());
     }
 
     public function getAll() {
@@ -64,7 +64,7 @@ abstract class Repository implements IModel
 
     private function update(DataEntity $entity) {
         $new = json_decode(json_encode($entity),TRUE);
-        $original = $this->getOne($entity->id);
+        $original = $this->getWhere('id', $entity->id);
         $params = array_diff($new, $original);
         unset($params['id']);
         $str = '';

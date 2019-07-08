@@ -1,41 +1,17 @@
 <?php
 session_start();
-//require_once '../engine/Autoload.php';
+//var_dump($_SESSION);
 require_once '../vendor/autoload.php';
 
-use app\engine;
-use app\engine\Render;
-use app\engine\Twigrender;
-use app\engine\Request;
+use app\engine\App;
 
-//spl_autoload_register([new engine\Autoload(), 'loadClass']);
+$config = include __DIR__ . "/../config/config.php";
 
-$request = new Request();
-
-$controllerName = $request->getControllerName() ?: 'user';
-$actionName = $request->getActionName();
-
-
-$controllerClass = "app\\controllers\\" . ucfirst($controllerName) . "Controller";
-if (class_exists($controllerClass)) {
-    $controller = new $controllerClass(new Twigrender());
-    //$controller = new $controllerClass(Render::getInstance());
-    $controller->runAction($actionName);
-} else {
-    echo "404";
+try {
+    App::call()->run($config);
+    //var_dump(App::call());
+    //var_dump($_SESSION);
+} catch (Exception $e) {
+    echo $e->getMessage();
 }
 
-
-
-//try {
-//
-//    if (!class_exists('Test'))
-//        throw new \Exception("три топора ", 777);
-//    else
-//        $test = new Test();
-//
-//} catch (\Exception $e) {
-//
-//    echo $e->getMessage();
-//    echo $e->getCode();
-//}

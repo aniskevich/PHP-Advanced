@@ -3,18 +3,16 @@
 
 namespace app\controllers;
 
-
-use app\engine\Request;
-use app\model\repositories\UsersRepository;
+use app\engine\App;
 
 class UserController extends Controller
 {
     private function isAuth() {
-        return isset($_SESSION['login']) ? true : false;
+        return  (App::call()->session->getLogin() != "guest") ? true : false;
     }
 
     private function getName() {
-        return $this->isAuth() ? $_SESSION['login'] : "Guest";
+        return $this->isAuth() ? App::call()->session->getLogin() : "Guest";
     }
 
     public function actionAuth() {
@@ -25,18 +23,15 @@ class UserController extends Controller
     }
 
     public function actionLogin() {
-        $request = new Request();
-
-        if (isset($request->getParams()['send'])) {
-            $login = $request->getParams()['login'];
-            $pass = $request->getParams()['pass'];
-            if (!((new UsersRepository())->auth($login, $pass))) {
+        if (isset(App::call()->request->getParams()['send'])) {
+            $login = App::call()->request->getParams()['login'];
+            $pass = App::call()->request->getParams()['pass'];
+            if (!App::call()->usersRepository->auth($login, $pass)) {
                 Die("Логин или пароль не верный!");
             } else {
                 header("Location: /user/");
             }
         }
-
     }
 
     public function actionLogout() {
@@ -47,6 +42,23 @@ class UserController extends Controller
     }
 
     public function actionCabinet() {
-        echo $this->render('cabinet');
+        $orders = App::call()->ordersRepository->getWhere('user_id', App::call()->session->getUserId());
+        $sum = 0;
+        foreach ($orders as $key => $order) {
+            $orders[$key]['cart'] = App::call()->cartRepository->getWhere('session_id', $order['session_id']);
+            foreach ($orders[$key]['cart'] as $k => $product) {
+                $orders[$key]['cart'][$k] = App::call()->cartRepository->getCart($product['product_id']);
+                $orders[$key]['cart'][$k]['quantity'] = $product['quantity'];
+                $orders[$key]['cart'][$k]['subtotal'] = $orders[$key]['cart'][$k]['price'] * $product['quantity'];
+                $sum += $orders[$key]['cart'][$k]['subtotal'];
+            }
+        }
+        echo $this->render('cabinet', ['orders' => $orders, 'sum' => $sum]);
+
+    }
+
+    public function actionAdmin() {
+        $orders = App::call()->ordersRepository->getAll();
+        echo $this->render('admin', ['orders' => $orders]);
     }
 }

@@ -3,10 +3,10 @@
 namespace app\controllers;
 
 use app\interfaces\IRender;
-use app\model\entities\Cart;
-use app\model\repositories\CartRepository;
+use app\engine\App;
 
-abstract class Controller {
+abstract class Controller implements IRender
+{
     private $action;
     protected $defaultAction = 'auth';
     private $layout = 'main';
@@ -38,16 +38,22 @@ abstract class Controller {
 
     public function render($template, $params = []) {
         if ($this->useLayout) {
-            if (!isset($_SESSION['login']))  {
+            if (is_null(App::call()->session->getLogin()))  {
                 $username = null;
             } else {
-                $username = $_SESSION['login'];
+                $username = App::call()->session->getLogin();
+            }
+            if (!App::call()->session->isAdmin()) {
+                $admin = false;
+            } else {
+                $admin = true;
             }
             return $this->renderer->renderTemplate("layouts/{$this->layout}",
                    [
                        'content' => $this->renderer->renderTemplate($template, $params),
                        'username' => $username,
-                       'count' => (new CartRepository(session_id()))->getCountWhere('session_id', session_id())
+                       'admin' => $admin,
+                       'count' => $count = App::call()->session->getCount()
                    ]);
         } else {
             return $this->renderer->renderTemplate($template, $params);

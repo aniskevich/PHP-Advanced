@@ -1,0 +1,36 @@
+{% for product in cart %}
+    <div class="row cart border border-dark p-3">
+        <!-- <div class="col-2"><img src="../img/<?=$product->link?>" alt=""></div> -->
+        <div class="col-1">{{ product.name }}</div>
+        <div class="col-1">{{ product.category }}</div>
+        <div class="col-1">{{ product.type }}</div>
+        <div class="col-1">{{ product.color }}</div>
+        <div class="col-1">{{ product.size }}</div>
+        <div class="col-3">{{ product.about }}</div>
+        <div class="col-1">{{ product.price }}</div>
+        <div class="col-1">{{ product.quantity }}</div>
+    </div>
+{% endfor %}
+
+<form class="mt-2" method="POST" action="/orders/add/">
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label for="inputEmail">Email</label>
+            <input name="email" type="email" class="form-control" id="inputEmail" placeholder="Email" required>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="inputAddress">Address</label>
+        <input name="address" type="text" class="form-control" id="inputAddress" placeholder="1234 Main St" required>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-4">
+            <label for="inputPayment">Payment</label>
+            <select name="payment" id="inputPayment" class="form-control">
+                <option selected>cash</option>
+                <option>card</option>
+            </select>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary">BUY</button>
+</form>

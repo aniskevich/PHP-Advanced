@@ -1,7 +1,17 @@
 <p>S_ID: {{ session_id }}</p>
+<div class="row border border-dark">
+    <div class="col-1">name</div>
+    <div class="col-1">category</div>
+    <div class="col-1">type</div>
+    <div class="col-1">color</div>
+    <div class="col-1">size</div>
+    <div class="col-3">about</div>
+    <div class="col-1">price</div>
+    <div class="col-1">quantity</div>
+    <div class="col-2">action</div>
+</div>
     {% for product in cart %}
     <div class="row cart">
-       <!-- <div class="col-2"><img src="../img/<?=$product->link?>" alt=""></div> -->
         <div class="col-1">{{ product.name }}</div>
         <div class="col-1">{{ product.category }}</div>
         <div class="col-1">{{ product.type }}</div>
@@ -10,9 +20,10 @@
         <div class="col-3">{{ product.about }}</div>
         <div class="col-1">{{ product.price }}</div>
         <div class="col-1">{{ product.quantity }}</div>
-        <button data-id="{{ product.cart_id }}" class="btn btn-dark delete">Delete</button>
+        <button data-id="{{ product.id }}" class="btn btn-dark delete">Delete</button>
     </div>
     {% endfor %}
+<a href="/orders/" class="btn btn-dark mt-2">Proceed to checkout</a>
 
 <script>
     $(document).ready(function() {

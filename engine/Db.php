@@ -2,21 +2,22 @@
 
 namespace app\engine;
 
-use app\traits\Tsingletone;
-
 class Db
 {
-    use Tsingletone;
-    private $config = [
-        'driver' => 'mysql',
-        'host' => 'localhost',
-        'port' => 8889,
-        'login' => 'user',
-        'password' => 'x4kbTNyvus4XNGxa',
-        'database' => 'PHP'
-    ];
+    private $config;
 
     private $connection = null;
+
+    public function __construct($driver, $host, $port, $login, $password, $database, $charset = "utf8")
+    {
+        $this->config['driver'] = $driver;
+        $this->config['host'] = $host;
+        $this->config['port'] = $port;
+        $this->config['login'] = $login;
+        $this->config['password'] = $password;
+        $this->config['database'] = $database;
+        $this->config['charset'] = $charset;
+    }
 
     private function getConnection() {
         if (is_null($this->connection)) {
@@ -32,11 +33,12 @@ class Db
     }
 
     private function prepareDsn() {
-        return sprintf("%s:host=%s;port=%i;dbname=%s",
+        return sprintf("%s:host=%s;port=%i;dbname=%s;charset=%s",
             $this->config['driver'],
             $this->config['host'],
             $this->config['port'],
-            $this->config['database']
+            $this->config['database'],
+            $this->config['charset']
             );
     }
 
@@ -56,7 +58,7 @@ class Db
     }
 
     public function build($sql, $id, $class) {
-        $stmt = $this->getConnection()->prepare($sql);
+        $stmt = $this->query($sql, $id);
         $stmt->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, $class);
         $stmt->execute($id);
         return $stmt->fetch();

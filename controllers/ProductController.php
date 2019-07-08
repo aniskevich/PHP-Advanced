@@ -2,21 +2,20 @@
 
 namespace app\controllers;
 
-use app\engine\Request;
-use app\model\repositories\ProductsRepository;
+use app\engine\App;
 
 class ProductController extends Controller
 {
     public function actionCatalog() {
-        $limit = (new Request())->getParams()['p'];
-        $products = (new ProductsRepository())->getLimit(0, $limit *3);
+        $limit = App::call()->request->getParams()['p'];
+        $products = App::call()->productsRepository->getLimit(0, $limit *3);
         echo $this->render('catalog', ['products' => $products, 'page' => $limit]);
     }
 
     public function actionCard() {
-        $id = (new Request())->getParams()['id'];
+        $id = App::call()->request->getParams()['id'];
         try {
-            $product = (new ProductsRepository())->buildFromDb($id);
+            $product = App::call()->productsRepository->buildFromDb($id);
             if (!$product)
                 throw new \Exception('Твои бы шаловливые ручки да картошку окучивать', 404);
             else

@@ -3,6 +3,8 @@
 
 namespace app\model\repositories;
 
+use app\engine\App;
+
 
 class UsersRepository extends Repository
 {
@@ -12,9 +14,7 @@ class UsersRepository extends Repository
         $user = $this->getWhere('username', $login);
 
         if ($pass == $user[0]["pass"]) {
-            $_SESSION['login'] = $login;
-            $_SESSION['user_id'] = $user[0]['id'];
-            $_SESSION['pages'] = []; //либо выгружать посещенные страницы из БД
+            App::call()->session->init($login, $user[0]['id'], $user[0]['role']);
             return true;
         }
         return false;
