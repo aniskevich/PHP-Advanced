@@ -1,14 +1,21 @@
-<p>User_ID: <?=$user_id?></p>
-    <?php foreach ($cart as $product) : ?>
-    <div class="row">
-       <!-- <div class="col-2"><img src="../img/<?=$product->link?>" alt=""></div> -->
-        <div class="col-1"><?=$product['name']?></div>
-        <div class="col-1"><?=$product['category']?></div>
-        <div class="col-1"><?=$product['type']?></div>
-        <div class="col-1"><?=$product['color']?></div>
-        <div class="col-1"><?=$product['size']?></div>
-        <div class="col-3"><?=$product['about']?></div>
-        <div class="col-1"><?=$product['price']?></div>
-        <div class="col-1"><?=$product['quantity']?></div>
+<div class="topBanner">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <p>NEW ARRIVALS</p>
+            </div>
+            <div class="col-md-6">
+                <nav aria-label="breadcrumb" class="topNav">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="#">HOME</a></li>
+                        <li class="breadcrumb-item"><a href="#">MEN</a></li>
+                        <li class="breadcrumb-item"><a href="#">NEW ARRIVALS</a></li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
     </div>
-    <?php endforeach;?>
+</div>
+<main>
+    <cart-list :cart="cart" :total="total" @deleteclick="deleteFromCart" @deletecart="deleteCart"></cart-list>
+</main>

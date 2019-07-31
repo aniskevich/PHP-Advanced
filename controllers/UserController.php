@@ -16,9 +16,7 @@ class UserController extends Controller
     }
 
     public function actionAuth() {
-        if (!$this->isAuth())
-            echo $this->render('auth');
-        else
+
             echo $this->render('index', ['name' => $this->getName()]);
     }
 

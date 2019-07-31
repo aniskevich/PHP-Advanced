@@ -15,7 +15,7 @@ class ProductController extends Controller
     public function actionCard() {
         $id = App::call()->request->getParams()['id'];
         try {
-            $product = App::call()->productsRepository->buildFromDb($id);
+            $product = App::call()->productsRepository->getOne($id);
             if (!$product)
                 throw new \Exception('Твои бы шаловливые ручки да картошку окучивать', 404);
             else

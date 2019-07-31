@@ -50,7 +50,7 @@ class App
 
         try {
             if (class_exists("$controllerClass")) {
-                $controller = new $controllerClass(new Twigrender());
+                $controller = new $controllerClass(new Render());
                 $controller->runAction($this->action);
             } else {
                 throw new \Exception("Класс не существует", 404);
