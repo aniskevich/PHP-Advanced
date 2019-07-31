@@ -1,0 +1,86 @@
+/* line 1, /Users/aerozol/Documents/GitHub/PHP-Advanced/public/style/sass/cabinet.scss */
+.cabinet {
+  padding: 20px;
+  border-top: 1px solid #ececec; }
+  /* line 4, /Users/aerozol/Documents/GitHub/PHP-Advanced/public/style/sass/cabinet.scss */
+  .cabinet h5 {
+    text-align: center;
+    text-transform: uppercase;
+    border-bottom: 1px solid #ececec;
+    width: 100%;
+    padding-bottom: 10px; }
+  /* line 11, /Users/aerozol/Documents/GitHub/PHP-Advanced/public/style/sass/cabinet.scss */
+  .cabinet .userInfo {
+    padding: 20px; }
+    /* line 13, /Users/aerozol/Documents/GitHub/PHP-Advanced/public/style/sass/cabinet.scss */
+    .cabinet .userInfo img {
+      display: block; }
+    /* line 16, /Users/aerozol/Documents/GitHub/PHP-Advanced/public/style/sass/cabinet.scss */
+    .cabinet .userInfo h6 {
+      text-transform: capitalize;
+      margin: 10px 0; }
+      /* line 19, /Users/aerozol/Documents/GitHub/PHP-Advanced/public/style/sass/cabinet.scss */
+      .cabinet .userInfo h6 span {
+        color: #f16d7f;
+        text-transform: none; }
+    /* line 24, /Users/aerozol/Documents/GitHub/PHP-Advanced/public/style/sass/cabinet.scss */
+    .cabinet .userInfo button {
+      width: 135px;
+      height: 30px;
+      border: 1px solid #eaeaea;
+      background-color: #ffffff;
+      color: #4a4a4a;
+      font-size: 14px;
+      font-weight: 700;
+      outline: none; }
+  /* line 37, /Users/aerozol/Documents/GitHub/PHP-Advanced/public/style/sass/cabinet.scss */
+  .cabinet #changeUserModal .modal-header h4 {
+    text-transform: uppercase; }
+  /* line 42, /Users/aerozol/Documents/GitHub/PHP-Advanced/public/style/sass/cabinet.scss */
+  .cabinet #changeUserModal .modal-body form {
+    display: flex;
+    flex-direction: column; }
+    /* line 45, /Users/aerozol/Documents/GitHub/PHP-Advanced/public/style/sass/cabinet.scss */
+    .cabinet #changeUserModal .modal-body form input {
+      padding-left: 5px; }
+    /* line 48, /Users/aerozol/Documents/GitHub/PHP-Advanced/public/style/sass/cabinet.scss */
+    .cabinet #changeUserModal .modal-body form .btn {
+      margin-top: 20px;
+      background-color: #f16d7f; }
+  /* line 55, /Users/aerozol/Documents/GitHub/PHP-Advanced/public/style/sass/cabinet.scss */
+  .cabinet .reviews {
+    padding: 20px;
+    text-align: center; }
+    /* line 58, /Users/aerozol/Documents/GitHub/PHP-Advanced/public/style/sass/cabinet.scss */
+    .cabinet .reviews .review {
+      padding: 10px 0;
+      text-align: justify;
+      border: 1px solid #ececec; }
+      /* line 62, /Users/aerozol/Documents/GitHub/PHP-Advanced/public/style/sass/cabinet.scss */
+      .cabinet .reviews .review :first-child, .cabinet .reviews .review :last-child {
+        text-align: center;
+        margin: auto 0; }
+  /* line 68, /Users/aerozol/Documents/GitHub/PHP-Advanced/public/style/sass/cabinet.scss */
+  .cabinet .addReview {
+    display: flex;
+    flex-direction: column;
+    align-items: center; }
+    /* line 72, /Users/aerozol/Documents/GitHub/PHP-Advanced/public/style/sass/cabinet.scss */
+    .cabinet .addReview textarea {
+      width: 600px;
+      border: 1px solid #ececec;
+      padding: 15px;
+      outline: none; }
+    /* line 78, /Users/aerozol/Documents/GitHub/PHP-Advanced/public/style/sass/cabinet.scss */
+    .cabinet .addReview button {
+      width: 135px;
+      height: 30px;
+      border: 1px solid #eaeaea;
+      background-color: #ffffff;
+      color: #4a4a4a;
+      font-size: 14px;
+      font-weight: 700;
+      outline: none;
+      margin-top: 20px; }
+
+/*# sourceMappingURL=../css/cabinet.map */

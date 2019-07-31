@@ -1,0 +1,19 @@
+@import "../../node_modules/bootstrap/scss/bootstrap.scss";
+.mainNav {
+    justify-content: space-around;
+    height: 42px;
+    li a {
+        color: #222222;
+        font-size: 14px;
+        font-weight: 700;
+        line-height: 26px;
+        text-transform: uppercase;
+        &:hover {
+            border-bottom: 2px solid #f16d7f;
+            border-radius: 0;
+        }
+    }
+    @include media-breakpoint-down(lg) {
+        height: auto;
+    }
+}

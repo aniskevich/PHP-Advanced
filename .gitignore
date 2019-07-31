@@ -1,0 +1,5 @@
+
+*.xml
+.idea/PHP-Advanced.iml
+/vendor
+composer.phar

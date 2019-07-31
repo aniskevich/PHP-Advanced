@@ -1,0 +1,78 @@
+<div class="row border border-dark">
+    <div class="col-1">id</div>
+    <div class="col-2">user mail</div>
+    <div class="col-1">payment</div>
+    <div class="col-2">delivery address</div>
+    <div class="col-2">date</div>
+    <div class="col-1">status</div>
+    <div class="col-1">detail</div>
+    <div class="col-1">update</div>
+</div>
+{% for order in orders %}
+<div class="row border border-dark p-3">
+    <div class="col-1">{{ order.id }}</div>
+    <div class="col-2">{{ order.user_mail }}</div>
+    <div class="col-1">{{ order.payment }}</div>
+    <div class="col-2">{{ order.address }}</div>
+    <div class="col-2">{{ order.date }}</div>
+    <div class="col-1">{{ order.status }}</div>
+    <button data-id="{{ order.id }}" class="btn btn-primary btn-dark detail col-1" type="button" data-toggle="collapse" data-target="#ord{{ order.id }}" aria-expanded="false">
+        Detail
+    </button>
+    <form class="form-inline col-1" action="/orders/update/?id={{ order.id }}" method="POST">
+        <select class="custom-select my-1 mr-sm-2" name="select">
+            <option selected value="payed">payed</option>
+            <option value="finished">finished</option>
+            <option value="canceled">canceled</option>
+        </select>
+        <button type="submit" class="btn btn-primary btn-dark">Submit</button>
+    </form>
+    <div class="collapse" id="ord{{ order.id }}"></div>
+</div>
+{% endfor %}
+
+<script>
+    $(document).ready(function() {
+        $(".detail").on('click', function(){
+            const id = $(this).attr('data-id');
+            $.ajax({
+                url: "/cart/getcart/",
+                type: "POST",
+                dataType: "json",
+                data: {
+                    id: id
+                },
+                error: function() {alert('error');},
+                success: function(response) {
+                    if (!$("#ord" + id).html()) {
+                        $("#ord" + id).append(
+                            "<div class='row border'>" +
+                            "<div class='col-1'>id</div>" +
+                            "<div class='col-4'>name</div>" +
+                            "<div class='col-2'>color</div>" +
+                            "<div class='col-2'>size</div>" +
+                            "<div class='col-2'>quantity</div>" +
+                            "<div class='col-1'>subtotal</div>" +
+                            "</div>"
+                        );
+                        $.each(response['cart'], function (key, object) {
+                            $("#ord" + id).append(
+                                "<div class='row'>" +
+                                "<div class='col-1 border-right'>" + object.product['id'] + "</div>" +
+                                "<div class='col-4 border-right'>" + object.product['name'] + "</div>" +
+                                "<div class='col-2 border-right'>" + object.product['color'] + "</div>" +
+                                "<div class='col-2 border-right'>" + object.product['size'] + "</div>" +
+                                "<div class='col-2'>" + object.product['quantity'] + "</div>" +
+                                "<div class='col-1'>" + object.product['subtotal'] + "</div>" +
+                                "</div>"
+                            );
+                        });
+                        $("#ord" + id).append("<div>Total sum: " + response['sum'] + "</div>");
+                    } else {
+                        $("#ord" + id).html();
+                    }
+                }
+            })
+        })
+    })
+</script>
