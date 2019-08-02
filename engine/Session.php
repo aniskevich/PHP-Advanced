@@ -42,8 +42,13 @@ class Session
     public function unsetCart($productId) {
         foreach ($_SESSION['cart'] as $key=>$item) {
             if (key($item) == $productId) {
-                unset($_SESSION['cart'][$key]);
-                return true;
+                if ($_SESSION['cart'][$key][$productId] > 1) {
+                    $_SESSION['cart'][$key][$productId]--;
+                } else {
+                    unset($_SESSION['cart'][$key]);
+                    return true;
+                }
+
             }
             else continue;
         }

@@ -9,7 +9,7 @@
     <div class="col-1">status</div>
 </div>
 <?php foreach ($orders as $order) :?>
-<div class="row cart border border-dark p-3">
+<!-- <div class="row cart border border-dark p-3">
     <div class="col-1"><?=$order[id]?></div>
     <div class="col-2">{{ order.user_mail }}</div>
     <div class="col-1">{{ order.payment }}</div>
@@ -17,7 +17,7 @@
     <div class="col-3">{{ order.date }}</div>
     <div class="col-2">Total: {{ order.sum }}</div>
     <div class="col-1">{{ order.status }}</div>
-    <?php foreach ($product as $order[cart]) :?>
+    <?php foreach ($order['cart'] as $product) :?>
     <div class="col-12">
         <div class="row border border-dark">
             <div class="col-2">name</div>
@@ -36,6 +36,7 @@
             <div class="col-2">{{ product.subtotal }}</div>
         </div>
     </div>
+    <?php var_dump($product) ?>
     <?php endforeach ?>
-</div>
+</div> --><?php var_dump($order) ?>
 <?php endforeach ?>

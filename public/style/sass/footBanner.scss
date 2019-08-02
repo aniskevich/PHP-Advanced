@@ -1,6 +1,6 @@
 @import "../../node_modules/bootstrap/scss/bootstrap.scss";
 .footBanner {
-    background-image: url(../images/footback.jpg);
+    background: url(../images/footback.jpg) no-repeat center;
     height: 438px;
     padding-top: 100px;
     .row {

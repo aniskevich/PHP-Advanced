@@ -9,6 +9,7 @@
     <link rel="stylesheet" type="text/css" href="/style/css/style.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="/vue.js"></script>
+    <script src="https://kit.fontawesome.com/f1e2c406e6.js"></script>
     <title>Document</title>
 </head>
 <body>
@@ -26,7 +27,7 @@
 
                 <div class="account col-lg-3 offset-lg-2 col-md-3">
                     <a href="/cart/"><img src="/images/cart.png" alt="cart"></a>
-                    <span class="count"><?= $count ?></span>
+                    <span class="count" ref="count"><?= $count ?></span>
                     <button id="myAcc" type="button" class="myAcc btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         My Account
                     </button>
@@ -76,7 +77,7 @@
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
-                                <div class="modal-body">
+                              <!--  <div class="modal-body">
                                     <form @submit.prevent="handleRegister(user); $('#registerModal').modal('hide')">
                                         <label for="login">LOGIN*</label>
                                         <input type="text" v-model="user.login" name="login" required>
@@ -85,7 +86,7 @@
                                         <p>* Required Fields</p>
                                         <input type="submit" value ="Register" class="btn btn-primary">
                                     </form>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                     </div>
@@ -102,24 +103,7 @@
             </li>
         </ul>
     </div>
-  <!--  <ul class="nav justify-content-center mt-2">
-
-        <?php if ($username != 'guest')  :?>
-        <li class="nav-item">
-            <a class="nav-link" href="/user/cabinet/">Cabinet</a>
-        </li>
-            <?php if ($admin)  :?>
-        <li class="nav-item">
-            <a class="nav-link" href="/user/admin">Admin page</a>
-        </li>
-        <?php endif ?>
-        <li class="nav-item">
-            <a class="nav-link" href="/user/logout">Logout</a>
-        </li>
-        <?php endif ?>
-    </ul> -->
     <?=$content?>
-
     <foot-banner></foot-banner>
     <foot></foot>
     <copy></copy>

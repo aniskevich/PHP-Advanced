@@ -24,107 +24,6 @@ Vue.component('search-field', {
     }
 });
 
-// Vue.component('account', {
-//     template: `
-//     <div class="account col-lg-3 offset-lg-2 col-md-3">
-//         <a href="/cart/"><img src="/images/cart.png" alt="cart"></a>
-//         <span class="count"><?= $count ?></span>
-//         <button id="myAcc" type="button" class="myAcc btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-//             My Account
-//         </button>
-//             <div class="dropdown-menu" aria-labelledby="myAcc" v-if="!$parent.isLogin">
-//                 <a class="dropdown-item" @click="$('#loginModal').modal('show')">Log In</a>
-//                 <a class="dropdown-item" @click="$('#registerModal').modal('show')">Register</a>
-//             </div>
-//             <div class="dropdown-menu" aria-labelledby="myAcc" v-if="$parent.isLogin">
-//                 <a class="dropdown-item" href="/user/cabinet/">Cabinet</a>
-//                 <a class="dropdown-item" @click="handleLogout">Log Out</a>
-//             </div>
-//             <modalLogin @handleLogin="handleLogin" :user="{}"></modalLogin>
-//             <modalRegister @handleRegister="handleRegister" :user="{}"></modalRegister>
-//     </div>
-//     `,
-//     methods: {
-//         handleLogin(user) {
-//             this.$emit('handlelogin', user);
-//         },
-//         handleRegister(user) {
-//             this.$emit('handleregister', user);
-//         },
-//         handleLogout() {
-//             this.$emit('handlelogout');
-//         }
-//     }
-// });
-
-// Vue.component('modalLogin', {
-//     props: ['user'],
-//     template: `
-//     <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-hidden="true">
-//       <div class="modal-dialog" role="document">
-//         <div class="modal-content">
-//           <div class="modal-header">
-//             <h4>Log In</h4>
-//             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-//               <span aria-hidden="true">&times;</span>
-//             </button>
-//           </div>
-//           <div class="modal-body">
-//             <form @submit.prevent="handleLogin(user); $('#loginModal').modal('hide')">
-//                 <label for="login">LOGIN*</label>
-//                 <input type="text" v-model="user.login" name="login" required>
-//                 <label for="password">PASSWORD*</label>
-//                 <input type="password" v-model="user.password" name="password" required>
-//                 <p>* Required Fields</p>
-//                 <input type="submit" value ="Log In" class="btn btn-primary">
-//             </form>
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//     `,
-//     methods: {
-//         handleLogin(user) {
-//             this.$emit('handleLogin', user);
-//             this.user = [];
-//         }
-//     }
-// });
-
-// Vue.component('modalRegister', {
-//     props: ['user'],
-//     template: `
-//     <div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-hidden="true">
-//       <div class="modal-dialog" role="document">
-//         <div class="modal-content">
-//           <div class="modal-header">
-//             <h4>Registration</h4>
-//             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-//               <span aria-hidden="true">&times;</span>
-//             </button>
-//           </div>
-//           <div class="modal-body">
-//             <form @submit.prevent="handleRegister(user); $('#registerModal').modal('hide')">
-//                 <label for="login">LOGIN*</label>
-//                 <input type="text" v-model="user.login" name="login" required>
-//                 <label for="password">PASSWORD*</label>
-//                 <input type="password" v-model="user.password" name="password" required>
-//                 <p>* Required Fields</p>
-//                 <input type="submit" value ="Register" class="btn btn-primary">
-//             </form>
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//     `,
-//     methods: {
-//         handleRegister(user) {
-//             this.$emit('handleRegister', user);
-//             this.user = [];
-//         }
-//     }
-// });
-
 Vue.component('items-list', {
     props: ['query'],
     data() {
@@ -190,13 +89,13 @@ Vue.component('single-product', {
             </ol>
             <div class="carousel-inner">
                 <div class="carousel-item active">
-                <img :src="product.link">
+                <img :src="/images/ + product.link">
                 </div>
                 <div class="carousel-item">
-                <img :src="product.link">
+                <img :src="/images/ + product.link">
                 </div>
                 <div class="carousel-item">
-                <img :src="product.link">
+                <img :src="/images/ + product.link">
                 </div>
             </div>
             <a class="carousel-control-prev" href="#carouselSinglePage" role="button" data-slide="prev">
@@ -245,32 +144,32 @@ Vue.component('single-product', {
         </div>
         <div class="alsoLike">
             <h2>you may like also</h2>
+             <items-list :query="search"></items-list>
         </div>
     </div>
     </div>
     `,
-    // mounted() {
-    //     fetch(`/product/card/?id=1`)
-    //         .then((response) => {
-    //             this.response = response.status;
-    //             return response.json();
-    //         })
-    //          .then((result) => {
-    //         //     fetch(`${API_URL}/stock/${result.currentProduct}`)
-    //         //         .then((response) =>
-    //         //             response.json()
-    //         //         )
-    //         //         .then((result) => {
-    //         //             this.product = result;
-    //         //             this.product.quantity = 1;
-    //         //             this.computedProduct = Object.assign({}, this.product);
-    //         //         });
-    //              console.log(result);
-    //              this.product = result;
-    //              this.product.quantity = 1;
-    //              this.computedProduct = Object.assign({}, this.product);
-    //          });
-    // },
+    mounted() {
+        fetch(`/api/product/?id=${window.location.search.replace("?id=", "")}`)
+            .then((response) => {
+                this.response = response.status;
+                return response.json();
+            })
+             .then((result) => {
+            //     fetch(`${API_URL}/stock/${result.currentProduct}`)
+            //         .then((response) =>
+            //             response.json()
+            //         )
+            //         .then((result) => {
+            //             this.product = result;
+            //             this.product.quantity = 1;
+            //             this.computedProduct = Object.assign({}, this.product);
+            //         });
+                 this.product = result;
+                 this.product.quantity = 1;
+                 this.computedProduct = Object.assign({}, this.product);
+             });
+    },
     methods: {
         handleBuy() {
             this.computedProduct.color = event.target.selectColor.value;
@@ -281,7 +180,12 @@ Vue.component('single-product', {
 });
 
 Vue.component('cart-list', {
-    props: ['cart', 'total'],
+    data() {
+        return {
+            cart: [],
+            total: 0,
+        };
+    },
     template: `
     <div class="shoppingCart">
         <div class="container">
@@ -297,8 +201,8 @@ Vue.component('cart-list', {
             <cart-product @deleteClick="deleteFromCart" v-for="product in cart" :product="product"></cart-product>
             <div class="shopCartButtons">
                 <div class="row container">
-                    <div><button @click="deleteCart">CLEAR SHOPPING CART</button></div>
-                    <div><a href="http://localhost:3000/product.html"><button>CONTINUE SHOPPING</button></a></div>
+                    <div><a href="/cart/deletecart/"><button>CLEAR SHOPPING CART</button></a></div>
+                    <div><a href="/product/catalog/?p=1"><button>CONTINUE SHOPPING</button></a></div>
                 </div>
             </div>
             <div class="container">
@@ -321,9 +225,9 @@ Vue.component('cart-list', {
                         </form>
                     </div>
                     <div class="col-xl-4 col-md-12 col-sm-12 total">
-                        <p>SUB TOTAL $ {{ total }}.00</p>
-                        <h5>GRAND TOTAL <span>$ {{ total }}.00</span></h5>
-                        <img src="images/line.png" alt="line">
+                        <p>SUB TOTAL $ {{ this.total }}.00</p>
+                        <h5>GRAND TOTAL <span>$ {{ this.total }}.00</span></h5>
+                        <img src="/images/line.png" alt="line">
                         <a href="http://localhost:3000/checkout.html"><button>PROCEED TO CHECKOUT</button></a>
                     </div>
                 </div>
@@ -335,12 +239,25 @@ Vue.component('cart-list', {
         </div>
     </div>
     `,
+    mounted() {
+        fetch(`/api/getcart/`)
+            .then((response) =>
+                response.json()
+            )
+            .then((result) => {
+                this.cart = result;
+                this.total = this.cart.reduce((acc, product) => acc + product.price * product.quantity, 0);
+            });
+    },
     methods: {
         deleteFromCart(product) {
-            this.$emit('deleteclick', product);
-        },
-        deleteCart() {
-            this.$emit('deletecart');
+            fetch(`/cart/deletefromcart/?id=${product.id}`)
+                .then((response) => response.json())
+                .then((result) => {
+                    app.$refs.count.innerText = result.count;
+                    this.cart = result.cart;
+                    this.total = this.cart.reduce((acc, product) => acc + product.price * product.quantity, 0);
+                });
         },
     },
 });
@@ -350,7 +267,7 @@ Vue.component('cart-product', {
     template: `
     <div class="row shopCartProduct">
         <div class="col-md-4 article">
-            <img :src="product.link">
+            <img :src="/images/ + product.link">
             <article>
                 <h4> {{ product.name }} </h4>
                 <p>
@@ -361,8 +278,8 @@ Vue.component('cart-product', {
         </div>
         <div class="col-md-2">$ {{ product.price }}.00</div>
         <div class="col-md-2">{{ product.quantity }} pcs.</div>
-        <div class="col-md-1">{{ product.shipping }}</div>
-        <div class="col-md-2">$ {{ product.subtotal }}.00</div>
+        <div class="col-md-1">FREE</div>
+        <div class="col-md-2">$ {{ product.quantity * product.price }}.00</div>
         <div class="col-md-1"><i class="fas fa-times-circle" @click="deleteFromCart(product)"></i></div>
     </div>
     `,
@@ -507,13 +424,13 @@ Vue.component('foot-banner', {
     </div>
    `,
    mounted() {
-    fetch(`${API_URL}/reviews`)
+    fetch(`/api/reviews`)
     .then((response) => {
         this.response = response.status;
         return response.json();
     })
     .then((result) => {
-        this.reviews = result.reviews;
+        this.reviews = result;
     });
    },
 });
@@ -647,193 +564,63 @@ const app = new Vue({
             { name: 'featured', link: "/product/catalog/?p=1" },
             { name: 'hot deals', link: "/product/catalog/?p=1" },
         ],
-        cart: [],
         product: {},
         currentProduct: 0,
         reviews: [],
         reviewsToApprove: [],
         search: '',
         response: '',
-        total: 0,
-        isLogin: false,
-        activeUserId: 0,
-        isAdmin: false,
-        user: {},
+
     },
     mounted() {
-        fetch(`${API_URL}/preferences`)
-            .then((response) => {
-                this.response = response.status;
-                return response.json();
-            })
-            .then((result) => {
-                this.isLogin = result.isLogin;
-                this.activeUserId = result.user_id;
-                this.isAdmin = result.isAdmin;
-                fetch(`${API_URL}/cart/${this.activeUserId}`)
-                    .then((response) => {
-                        this.response = response.status;
-                        return response.json();
-                    })
-                    .then((result) => {
-                        this.cart = result.products;
-                        this.total = result.total;
-                    });
-                fetch(`${API_URL}/users/${this.activeUserId}`)
-                    .then((response) => {
-                        this.response = response.status;
-                        return response.json();
-                    })
-                    .then((result) => {
-                        this.user = result.user;
-                    });
-                fetch(`${API_URL}/reviews/${this.activeUserId}`)
-                    .then((response) => {
-                        this.response = response.status;
-                        return response.json();
-                    })
-                    .then((result) => {
-                        this.reviews = result.reviews;
-                        this.reviewsToApprove = result.reviewsToApprove;
-                    });
-            });
+        // fetch(`${API_URL}/preferences`)
+        //     .then((response) => {
+        //         this.response = response.status;
+        //         return response.json();
+        //     })
+        //     .then((result) => {
+        //         this.isLogin = result.isLogin;
+        //         this.activeUserId = result.user_id;
+        //         this.isAdmin = result.isAdmin;
+        //         fetch(`${API_URL}/cart/${this.activeUserId}`)
+        //             .then((response) => {
+        //                 this.response = response.status;
+        //                 return response.json();
+        //             })
+        //             .then((result) => {
+        //                 this.cart = result.products;
+        //                 this.total = result.total;
+        //             });
+        //         fetch(`${API_URL}/users/${this.activeUserId}`)
+        //             .then((response) => {
+        //                 this.response = response.status;
+        //                 return response.json();
+        //             })
+        //             .then((result) => {
+        //                 this.user = result.user;
+        //             });
+        //         fetch(`${API_URL}/reviews/${this.activeUserId}`)
+        //             .then((response) => {
+        //                 this.response = response.status;
+        //                 return response.json();
+        //             })
+        //             .then((result) => {
+        //                 this.reviews = result.reviews;
+        //                 this.reviewsToApprove = result.reviewsToApprove;
+        //             });
+        //     });
     },
     methods: {
         handleSearch(query) {
             this.search = query;
         },
-        deleteFromCart(product) {
-            if (product.quantity > 1) {
-                fetch(`${API_URL}/cart/${this.activeUserId}`, {
-                    method: 'PATCH',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ product_id: product.id, quantity: --product.quantity, subtotal: product.price * product.quantity, color: product.color, size: product.size,  })
-                }).then((response) => response.json())
-                    .then((result) => {
-                        const itemIdx = this.cart.findIndex(cartItem => cartItem.id === product.id);
-                        Vue.set(this.cart, itemIdx, result.product);
-                        this.total = result.total;
-                    });
-            } else {
-                fetch(`${API_URL}/cart/${this.activeUserId}/${product.id}/${product.color}/${product.size}`, {
-                    method: 'DELETE',
-                }).then((response) => response.json())
-                    .then((result) => {
-                        this.cart = result.cart;
-                        this.total = result.total;
-                    });
-            }
-        },
-        deleteCart() {
-            fetch(`${API_URL}/cart/${this.activeUserId}`, {
-                method: 'DELETE',
-            }).then((response) => response.json())
-                .then((result) => {
-                    this.cart = result.cart;
-                    this.total = result.total;
-                });
-        },
         handleBuy(product) {
-                const cartItem = this.cart.find(cartItem => ((cartItem.id === product.id) && (cartItem.size === product.size) && (cartItem.color === product.color)));
-                if (cartItem) {
-                        fetch(`${API_URL}/cart/${this.activeUserId}`, {
-                            method: 'PATCH',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ product_id: product.id, quantity: cartItem.quantity + product.quantity, subtotal: cartItem.price * (cartItem.quantity + product.quantity), color: product.color, size: product.size, })
-                        })
+            fetch(`/cart/addcart/?id=${product.id}&quantity=${product.quantity}`)
                             .then((response) => response.json())
                             .then((result) => {
-                                const itemIdx = this.cart.findIndex(cartItem => cartItem.id === product.id);
-                                Vue.set(this.cart, itemIdx, result.product);
-                                this.total = result.total;
+                                this.$refs.count.innerText = result.count;
                             });
-                }
-                else {
-                    fetch(`${API_URL}/cart/${this.activeUserId}`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ ...product, subtotal: product.price * product.quantity, }),
-                    })
-                        .then((response) => response.json())
-                        .then((result) => {
-                            this.cart.push(result.product);
-                            this.total = result.total;
-                        });
-                }
         },
-        // handleLogin(user) {
-        //     fetch(`${API_URL}/auth`, {
-        //         method: 'POST',
-        //         headers: { 'Content-Type': 'application/json' },
-        //         body: JSON.stringify({ ...user }),
-        //     })
-        //         .then((response) => response.json())
-        //         .then((result) => {
-        //             if (result.auth === 'OK') {
-        //                 this.activeUserId = result.id;
-        //                 this.isAdmin = result.isAdmin;
-        //                 fetch(`${API_URL}/preferences`, {
-        //                     method: 'PATCH',
-        //                     headers: { 'Content-Type': 'application/json' },
-        //                     body: JSON.stringify({ isLogin: true, user_id: this.activeUserId, isAdmin: this.isAdmin, })
-        //                 })
-        //                     .then((response) => response.json())
-        //                     .then((result) => {
-        //                         this.isLogin = result.isLogin;
-        //                         this.activeUserId = result.user_id;
-        //                         fetch(`${API_URL}/users/${this.activeUserId}`)
-        //                             .then((response) => response.json())
-        //                             .then((result) => {
-        //                                 this.user = result.user;
-        //                             });
-        //                         fetch(`${API_URL}/reviews/${this.activeUserId}`)
-        //                             .then((response) => {
-        //                                 this.response = response.status;
-        //                                 return response.json();
-        //                             })
-        //                             .then((result) => {
-        //                                 this.reviews = result.reviews;
-        //                                 this.reviewsToApprove = result.reviewsToApprove;
-        //                             });
-        //                     });
-        //             }
-        //             else {
-        //                 console.log('error');
-        //             }
-        //         });
-        // },
-        // handleRegister(user) {
-        //     fetch(`${API_URL}/users`, {
-        //         method: 'POST',
-        //         headers: { 'Content-Type': 'application/json' },
-        //         body: JSON.stringify({ ...user }),
-        //     })
-        //         .then((response) => response.json())
-        //         .then((result) => {
-        //             if (result.auth === 'OK') {
-        //                 this.isLogin = true;
-        //                 this.activeUserId = result.id;
-        //             }
-        //             else {
-        //                 console.log('error');
-        //             }
-        //         });
-        // },
-        // handleLogout() {
-        //     fetch(`${API_URL}/preferences`, {
-        //         method: 'PATCH',
-        //         headers: { 'Content-Type': 'application/json' },
-        //         body: JSON.stringify({ isLogin: false, user_id: 0, isAdmin: false, })
-        //     })
-        //         .then((response) => response.json())
-        //         .then((result) => {
-        //             this.isLogin = result.isLogin;
-        //             this.activeUserId = result.user_id;
-        //             this.user = {};
-        //             this.isAdmin = result.isAdmin;
-        //             this.reviews = [];
-        //         });
-        // },
         addReview(review) {
             fetch(`${API_URL}/reviews`, {
                 method: 'POST',

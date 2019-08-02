@@ -9,8 +9,7 @@ class CartController extends Controller
     protected $defaultAction = 'cart';
 
     public function actionCart() {
-        $cart = App::call()->session->getCart();
-        echo $this->render('cart', ['cart' => $cart, 'session_id' => session_id()]);
+        echo $this->render('cart');
     }
 
     public function actionAddCart() {
@@ -23,13 +22,19 @@ class CartController extends Controller
         echo json_encode($response);
     }
 
-    public function actionDeleteCart() {
+    public function actionDeleteFromCart() {
         $id = App::call()->request->getParams()['id'];
         App::call()->session->unsetCart($id);
         $count = App::call()->session->getCount();
-        $response = ['result' => 1, 'count' => $count, 'id' => $id];
+        $cart = App::call()->session->getCart();
+        $response = ['result' => 1, 'count' => $count, 'cart' => $cart];
         header('Content-Type: application/json');
         echo json_encode($response);
+    }
+
+    public function actionDeleteCart() {
+        App::call()->session->clearCart();
+        header("Location: /cart/");
     }
 
     public function actionGetCart() {

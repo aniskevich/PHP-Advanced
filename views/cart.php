@@ -17,5 +17,5 @@
     </div>
 </div>
 <main>
-    <cart-list :cart="cart" :total="total" @deleteclick="deleteFromCart" @deletecart="deleteCart"></cart-list>
+    <cart-list></cart-list>
 </main>

@@ -7021,7 +7021,7 @@ a.text-dark:hover, a.text-dark:focus {
     border-color: #dee2e6; } }
 
 .footBanner {
-  background-image: url(../images/footback.jpg);
+  background: url(../images/footback.jpg) no-repeat center;
   height: 438px;
   padding-top: 100px; }
   .footBanner .row {
