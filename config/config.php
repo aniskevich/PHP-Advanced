@@ -7,6 +7,7 @@ use app\model\repositories\CartRepository;
 use app\model\repositories\ProductsRepository;
 use app\model\repositories\UsersRepository;
 use app\model\repositories\OrdersRepository;
+use app\model\repositories\ReviewsRepository;
 
 return [
     'root_dir' => __DIR__ . "/../",
@@ -40,6 +41,9 @@ return [
         ],
         'ordersRepository' => [
             'class' => OrdersRepository::class
+        ],
+        'reviewsRepository' => [
+            'class' => ReviewsRepository::class
         ]
 
     ]

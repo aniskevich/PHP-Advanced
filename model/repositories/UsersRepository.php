@@ -4,6 +4,7 @@
 namespace app\model\repositories;
 
 use app\engine\App;
+use app\model\entities\Users;
 
 
 class UsersRepository extends Repository
@@ -18,5 +19,9 @@ class UsersRepository extends Repository
             return true;
         }
         return false;
+    }
+
+    public function getEntityClass() {
+        return Users::class;
     }
 }

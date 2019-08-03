@@ -228,7 +228,7 @@ Vue.component('cart-list', {
                         <p>SUB TOTAL $ {{ this.total }}.00</p>
                         <h5>GRAND TOTAL <span>$ {{ this.total }}.00</span></h5>
                         <img src="/images/line.png" alt="line">
-                        <a href="http://localhost:3000/checkout.html"><button>PROCEED TO CHECKOUT</button></a>
+                        <a href="/orders/"><button>PROCEED TO CHECKOUT</button></a>
                     </div>
                 </div>
             </div>
@@ -424,7 +424,7 @@ Vue.component('foot-banner', {
     </div>
    `,
    mounted() {
-    fetch(`/api/reviews`)
+    fetch(`/api/bannerreviews`)
     .then((response) => {
         this.response = response.status;
         return response.json();
@@ -436,74 +436,86 @@ Vue.component('foot-banner', {
 });
 
 Vue.component('cabinet', {
-    props: ["user"],
     data() {
         return {
+            reviews: [],
+            user: [],
             review: '',
         };
     },
     template: `
-        <div class="container cabinet" v-if="app.activeUserId !== 0">
-            <div class="userInfo">
+        <div class="container cabinet">
+           <div class="userInfo">
                 <h5>user info</h5>
-                <img :src="user.link" alt="user_avatar">
-                <h6>username: <span>{{ user.name }}</span></h6>
-                <h6>email: <span>{{ user.email }}</span></h6>
-                <h6>gender: <span>{{ user.gender }}</span></h6>
+                <img :src="/images/ + this.user.link" alt="user_avatar">
+                <h6>username: <span>{{ this.user.username }}</span></h6>
+                <h6>email: <span>{{ this.user.email }}</span></h6>
+                <h6>gender: <span>{{ this.user.gender }}</span></h6>
                 <h6>bio:</h6>
-                <p>{{ user.bio }}</p>
+                <p>{{ this.user.info }}</p>
                 <button @click="$('#changeUserModal').modal('show')">CHANGE</button>
             </div>
             <change-user-modal @changeUserInfo="changeUserInfo"></change-user-modal>
-            <div class="reviews">
+            <div class="reviews" v-if="this.reviews.length">
                 <h5>user reviews</h5>
                 <div class="row">
                     <div class="col-md-2">Review ID</div>
                     <div class="col-md-8">Review text</div>
                     <div class="col-md-2">Action</div>
                 </div>    
-                <div class="review row" v-for="review in app.reviews" v-if="app.reviews.length !== 0">
+                 <div class="review row" v-for="review in this.reviews">
                     <div class="col-md-2">{{ review.id }}</div>
-                    <div class="col-md-8">{{ review.text }}</div>
-                    <div class="col-md-2"><i class="fas fa-times-circle" @click="deleteReview(review)"></i></div>
-                </div>
-                <div class="review row" v-for="review in app.reviewsToApprove" v-if="app.isAdmin">
-                    <div class="col-md-2">{{ review.id }}</div>
-                    <div class="col-md-8">{{ review.text }}</div>
-                    <div class="col-md-1"><i class="fas fa-check-circle" @click="approveReview(review)"></i></div>
-                    <div class="col-md-1"><i class="fas fa-times-circle" @click="deleteReview(review)"></i></div>
-                </div>
-            </div>
-            <div class="addReview">
+                   <div class="col-md-8">{{ review.text }}</div>
+                    <div class="col-md-2"><i class="fas fa-times-circle" @click="deleteReview(review)"></i></div> 
+                </div> 
+            </div> 
+           <div class="addReview">
                 <h5>add review</h5>
                 <textarea v-model="review"></textarea>
                 <button @click="addReview">ADD</button>
-            </div>
+            </div> 
         </div>
     `,
     methods: {
         deleteReview(review) {
-            this.$emit('deletereviewclick', review);
+            fetch(`/api/deletereview/?id=${review.id}`)
+                .then((response) => response.json())
+                .then((result) => {
+                    this.reviews = result;
+                });
         },
         addReview() {
-            this.$emit('addreviewclick', this.review);
+            fetch(`/api/addreview/?text=${this.review}`)
+                .then((response) => response.json())
+                .then((result) => {
+
+                    this.reviews = result;
+                });
             this.review = '';
-        },
-        approveReview(review) {
-            this.$emit('approvereviewclick', review);
         },
         changeUserInfo(changedUserInfo) {
             this.$emit('changeuserinfo', changedUserInfo);
         },
     },
     mounted() {
-        fetch(`${API_URL}/reviews`)
-            .then((response) => {
-                this.response = response.status;
-                return response.json();
-            })
+        fetch(`/api/getuser/`)
+            .then((response) =>
+                response.json()
+            )
             .then((result) => {
-                this.reviews = result.reviews;
+                this.user = result;
+                fetch(`/api/reviews/`)
+                            .then((response) => {
+                                this.response = response.status;
+                                return response.json();
+                            })
+                            .then((result) => {
+                                if (result.length !== 0) {
+                                    this.reviews = result;
+                                } else {
+                                    this.reviews = [];
+                                }
+                            });
             });
     },
 });
@@ -552,6 +564,138 @@ Vue.component('change-user-modal', {
     },
 });
 
+Vue.component('admin-page', {
+    data() {
+        return {
+            reviews: [],
+        };
+    },
+    template: `
+<div class="container cabinet">
+<div class="reviews" v-if="this.reviews.length">
+                <h5>reviews</h5>
+                <div class="row">
+                    <div class="col-md-2">Review ID</div>
+                    <div class="col-md-8">Review text</div>
+                    <div class="col-md-2">Action</div>
+                </div> 
+            
+        <div class="review row" v-for="review in this.reviews">
+                    <div class="col-md-2">{{ review.id }}</div>
+                    <div class="col-md-8">{{ review.text }}</div>
+                    <div class="col-md-1"><i class="fas fa-check-circle" @click="approveReview(review)"></i></div>
+                    <div class="col-md-1"><i class="fas fa-times-circle" @click="deleteReview(review)"></i></div>
+                </div> 
+                
+                </div></div>
+                <!--
+ <div class="row border border-dark">
+     <div class="col-1">id</div>
+     <div class="col-2">user mail</div>
+     <div class="col-1">payment</div>
+     <div class="col-2">delivery address</div>
+     <div class="col-2">date</div>
+     <div class="col-1">status</div>
+     <div class="col-1">detail</div>
+     <div class="col-1">update</div>
+ </div>
+ {% for order in orders %}
+ <div class="row border border-dark p-3">
+     <div class="col-1">{{ order.id }}</div>
+     <div class="col-2">{{ order.user_mail }}</div>
+     <div class="col-1">{{ order.payment }}</div>
+     <div class="col-2">{{ order.address }}</div>
+     <div class="col-2">{{ order.date }}</div>
+     <div class="col-1">{{ order.status }}</div>
+     <button data-id="{{ order.id }}" class="btn btn-primary btn-dark detail col-1" type="button" data-toggle="collapse" data-target="#ord{{ order.id }}" aria-expanded="false">
+         Detail
+     </button>
+     <form class="form-inline col-1" action="/orders/update/?id={{ order.id }}" method="POST">
+         <select class="custom-select my-1 mr-sm-2" name="select">
+             <option selected value="payed">payed</option>
+             <option value="finished">finished</option>
+             <option value="canceled">canceled</option>
+         </select>
+         <button type="submit" class="btn btn-primary btn-dark">Submit</button>
+     </form>
+     <div class="collapse" id="ord{{ order.id }}"></div>
+ </div>
+ {% endfor %}
+
+ <script>
+     $(document).ready(function() {
+         $(".detail").on('click', function(){
+             const id = $(this).attr('data-id');
+             $.ajax({
+                 url: "/cart/getcart/",
+                 type: "POST",
+                 dataType: "json",
+                 data: {
+                     id: id
+                 },
+                 error: function() {alert('error');},
+                 success: function(response) {
+                     if (!$("#ord" + id).html()) {
+                         $("#ord" + id).append(
+                             "<div class='row border'>" +
+                             "<div class='col-1'>id</div>" +
+                             "<div class='col-4'>name</div>" +
+                             "<div class='col-2'>color</div>" +
+                             "<div class='col-2'>size</div>" +
+                             "<div class='col-2'>quantity</div>" +
+                             "<div class='col-1'>subtotal</div>" +
+                             "</div>"
+                         );
+                         $.each(response['cart'], function (key, object) {
+                             $("#ord" + id).append(
+                                 "<div class='row'>" +
+                                 "<div class='col-1 border-right'>" + object.product['id'] + "</div>" +
+                                 "<div class='col-4 border-right'>" + object.product['name'] + "</div>" +
+                                 "<div class='col-2 border-right'>" + object.product['color'] + "</div>" +
+                                 "<div class='col-2 border-right'>" + object.product['size'] + "</div>" +
+                                 "<div class='col-2'>" + object.product['quantity'] + "</div>" +
+                                 "<div class='col-1'>" + object.product['subtotal'] + "</div>" +
+                                 "</div>"
+                             );
+                         });
+                         $("#ord" + id).append("<div>Total sum: " + response['sum'] + "</div>");
+                     } else {
+                         $("#ord" + id).html();
+                     }
+                 }
+             })
+         })
+     })
+ </script>
+ -->
+    `,
+    methods: {
+        deleteReview(review) {
+            fetch(`/api/delreview/?id=${review.id}`)
+                .then((response) => response.json())
+                .then((result) => {
+                    this.reviews = result;
+                });
+        },
+        approveReview(review) {
+            fetch(`/api/approvereview/?id=${review.id}`)
+                .then((response) => response.json())
+                .then((result) => {
+                    this.reviews = result;
+                });
+        },
+    },
+    mounted() {
+        fetch(`/api/reviewstoapprove/`)
+            .then((response) =>
+                response.json()
+            )
+            .then((result) => {
+                this.reviews = result;
+            });
+    },
+});
+
 const app = new Vue({
     el: '#app',
     data: {
@@ -566,49 +710,9 @@ const app = new Vue({
         ],
         product: {},
         currentProduct: 0,
-        reviews: [],
-        reviewsToApprove: [],
         search: '',
         response: '',
 
-    },
-    mounted() {
-        // fetch(`${API_URL}/preferences`)
-        //     .then((response) => {
-        //         this.response = response.status;
-        //         return response.json();
-        //     })
-        //     .then((result) => {
-        //         this.isLogin = result.isLogin;
-        //         this.activeUserId = result.user_id;
-        //         this.isAdmin = result.isAdmin;
-        //         fetch(`${API_URL}/cart/${this.activeUserId}`)
-        //             .then((response) => {
-        //                 this.response = response.status;
-        //                 return response.json();
-        //             })
-        //             .then((result) => {
-        //                 this.cart = result.products;
-        //                 this.total = result.total;
-        //             });
-        //         fetch(`${API_URL}/users/${this.activeUserId}`)
-        //             .then((response) => {
-        //                 this.response = response.status;
-        //                 return response.json();
-        //             })
-        //             .then((result) => {
-        //                 this.user = result.user;
-        //             });
-        //         fetch(`${API_URL}/reviews/${this.activeUserId}`)
-        //             .then((response) => {
-        //                 this.response = response.status;
-        //                 return response.json();
-        //             })
-        //             .then((result) => {
-        //                 this.reviews = result.reviews;
-        //                 this.reviewsToApprove = result.reviewsToApprove;
-        //             });
-        //     });
     },
     methods: {
         handleSearch(query) {
@@ -620,27 +724,6 @@ const app = new Vue({
                             .then((result) => {
                                 this.$refs.count.innerText = result.count;
                             });
-        },
-        addReview(review) {
-            fetch(`${API_URL}/reviews`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ user_id: this.activeUserId, user_name: this.user.name, user_avatar: this.user.link, text: review, isApproved: false }),
-            })
-                .then((response) => response.json())
-                .then((result) => {
-                    this.reviews = result.reviews;
-                    this.reviewsToApprove = result.reviewsToApprove;
-                });
-        },
-        deleteReview(review) {
-            fetch(`${API_URL}/reviews/${this.activeUserId}/${review.id}`, {
-                method: 'DELETE',
-            }).then((response) => response.json())
-                .then((result) => {
-                    this.reviews = result.reviews;
-                    this.reviewsToApprove = result.reviewsToApprove;
-                });
         },
         approveReview(review) {
             fetch(`${API_URL}/reviews/${review.id}`, {

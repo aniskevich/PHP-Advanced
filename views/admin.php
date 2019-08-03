@@ -2,11 +2,10 @@
     <div class="container">
         <div class="row">
             <div class="col-md-6">
-                <p>Shop Cart</p>
+                <p>Admin page</p>
             </div>
         </div>
     </div>
 </div>
-<main>
-    <cart-list></cart-list>
-</main>
+<admin-page></admin-page>
+

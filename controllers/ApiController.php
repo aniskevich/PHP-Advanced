@@ -5,6 +5,7 @@ namespace app\controllers;
 
 
 use app\engine\App;
+use app\model\entities\Reviews;
 
 class ApiController extends Controller
 {
@@ -29,37 +30,65 @@ class ApiController extends Controller
     }
 
     public function actionReviews() {
-        $reviews = [
-            [
-                "user_id" => 2,
-                "user_name" => "User Test",
-                "user_avatar" => "/images/user.jpg",
-                "text" => "sgsdgsdg",
-                "isApproved" => true,
-                "id" => 5
-            ],
-            [
-                "user_id" => 1,
-                "user_name" => "NATASHA",
-                "user_avatar" => "/images/user.jpg",
-                "text" => "Отзыв !!! Привет, мне все понравилось",
-                "isApproved" => true,
-                "id" => 6
-            ],
-            [
-                "user_id" => 3,
-                "user_name" => "User",
-                "user_avatar" => "/images/user.jpg",
-                "text" => "!!!!",
-                "isApproved" => true,
-                "id" => 7
-            ]
-        ];
+        $id = App::call()->session->getUserId();
+        $reviews = App::call()->reviewsRepository->getWhere('user_id', $id);
+        echo json_encode($reviews);
+    }
+
+    public function actionBannerReviews() {
+        $reviews = App::call()->reviewsRepository->getLimit(0, 3);
+        echo json_encode($reviews);
+    }
+
+    public function actionAddReview() {
+        $text = App::call()->request->getParams()['text'];
+        $id = App::call()->session->getUserId();
+        App::call()->reviewsRepository->save(new Reviews($text));
+        $reviews = App::call()->reviewsRepository->getWhere('user_id', $id);
+        echo json_encode($reviews);
+    }
+
+    public function actionDeleteReview() {
+        $id = App::call()->request->getParams()['id'];
+        $userId = App::call()->session->getUserId();
+        $review = App::call()->reviewsRepository->getOne($id);
+        App::call()->reviewsRepository->delete($review);
+        $reviews = App::call()->reviewsRepository->getWhere('user_id', $userId);
+        echo json_encode($reviews);
+    }
+
+    public function actionDelReview() {
+        $id = App::call()->request->getParams()['id'];
+        $review = App::call()->reviewsRepository->getOne($id);
+        App::call()->reviewsRepository->delete($review);
+        $reviews = App::call()->reviewsRepository->getWhere('is_approved', 'false');
+        echo json_encode($reviews);
+    }
+
+    public function actionApproveReview() {
+        $id = App::call()->request->getParams()['id'];
+        $review = App::call()->reviewsRepository->getOne($id);
+        $review->is_approved = 'true';
+        App::call()->reviewsRepository->save($review);
+        $reviews = App::call()->reviewsRepository->getWhere('is_approved', 'false');
+        echo json_encode($reviews);
+    }
+
+    public function actionReviewsToApprove() {
+        $reviews = App::call()->reviewsRepository->getWhere('is_approved', 'false');
         echo json_encode($reviews);
     }
 
     public function actionGetCart() {
         $cart = App::call()->session->getCart();
         echo json_encode($cart);
+    }
+
+    public function actionGetUser() {
+        $id = App::call()->session->getUserId();
+        $user = App::call()->usersRepository->getWhere('id', $id)[0];
+        unset($user['pass']);
+        unset($user['role']);
+        echo json_encode($user);
     }
 }

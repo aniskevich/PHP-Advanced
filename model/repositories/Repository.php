@@ -64,7 +64,7 @@ abstract class Repository implements IModel
 
     private function update(DataEntity $entity) {
         $new = json_decode(json_encode($entity),TRUE);
-        $original = $this->getWhere('id', $entity->id);
+        $original = $this->getWhere('id', $entity->id)[0];
         $params = array_diff($new, $original);
         unset($params['id']);
         $str = '';
